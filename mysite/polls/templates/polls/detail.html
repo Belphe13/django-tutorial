@@ -1,6 +1,15 @@
 <h1>{{ question.question_text }}</h1>
-<ul>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<!-- medthod="post" opposed to method="get", submitting the form will alter data server-side; good web dev practice -->
+<form action="{% url 'polls:vote' question.id %}" method="post">
+<!-- all POST forms that are targeted at internal URLs use this template tag -->
+{% csrf_token %}
 {% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }}</li>
+    <!-- radio button for each question choice -->
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
 {% endfor %}
-</ul>
+<input type="submit" value="Vote">
+</form>
